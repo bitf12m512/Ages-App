@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="20" height="20" viewBox="0 0 20 20">
+  <defs>
+    <linearGradient id="linear-gradient" x1="0.5" x2="0.5" y2="1" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#ffcb00"/>
+      <stop offset="0.502" stop-color="#ff9f31"/>
+      <stop offset="1" stop-color="#c96400"/>
+    </linearGradient>
+  </defs>
+  <g id="emoji_3_" data-name="emoji (3)" transform="translate(-283.59 -791.193)">
+    <circle id="Ellipse_27" data-name="Ellipse 27" cx="9.449" cy="9.449" r="9.449" transform="translate(284.142 791.745)" opacity="0.4" fill="url(#linear-gradient)"/>
+    <path id="Path_3562" data-name="Path 3562" d="M9.417-.583a10,10,0,1,1-10,10A10.011,10.011,0,0,1,9.417-.583Zm0,18.9a8.9,8.9,0,1,0-8.9-8.9A8.907,8.907,0,0,0,9.417,18.314Z" transform="translate(284.174 791.777)" fill="url(#linear-gradient)"/>
+    <path id="Path_3564_-_Outline" data-name="Path 3564 - Outline" d="M1.445-.5A1.945,1.945,0,1,1-.5,1.445,1.947,1.947,0,0,1,1.445-.5Zm0,2.945a1,1,0,1,0-1-1A1,1,0,0,0,1.445,2.445Z" transform="translate(288.465 797.54)" fill="url(#linear-gradient)"/>
+    <path id="Path_3563_-_Outline" data-name="Path 3563 - Outline" d="M1.445-.5A1.945,1.945,0,1,1-.5,1.445,1.947,1.947,0,0,1,1.445-.5Zm0,2.945a1,1,0,1,0-1-1A1,1,0,0,0,1.445,2.445Z" transform="translate(295.827 797.54)" fill="url(#linear-gradient)"/>
+    <path id="Path_3561" data-name="Path 3561" d="M292.047,802.758a6.929,6.929,0,0,1-4.932-2.043l.668-.667a6.029,6.029,0,0,0,8.528,0l.668.668A6.931,6.931,0,0,1,292.047,802.758Z" transform="translate(1.544 4.061)" fill="url(#linear-gradient)"/>
+  </g>
+</svg>

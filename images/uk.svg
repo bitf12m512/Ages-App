@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="32" height="24" viewBox="0 0 32 24">
+  <defs>
+    <clipPath id="clip-path">
+      <path id="Path_2876" data-name="Path 2876" d="M-80.213,0h32V24h-32Z" fill="rgba(0,0,0,0.67)"/>
+    </clipPath>
+  </defs>
+  <g id="united-33115" transform="translate(80.213)" clip-path="url(#clip-path)">
+    <g id="Group_22" data-name="Group 22" transform="translate(-88.213)">
+      <path id="Path_2872" data-name="Path 2872" d="M-240.64,0h48V24h-48Z" transform="translate(240.64)" fill="#006"/>
+      <path id="Path_2873" data-name="Path 2873" d="M-240.64,0V2.683L-198.006,24h5.366V21.317L-235.274,0Zm48,0V2.683L-235.274,24h-5.366V21.317L-198.006,0Z" transform="translate(240.64)" fill="#fff"/>
+      <path id="Path_2874" data-name="Path 2874" d="M-220.64,0V24h8V0Zm-20,8v8h48V8Z" transform="translate(240.64)" fill="#fff"/>
+      <path id="Path_2875" data-name="Path 2875" d="M-240.64,9.6v4.8h48V9.6Zm21.6-9.6V24h4.8V0Zm-21.6,24,16-8h3.578l-16,8Zm0-24,16,8h-3.578L-240.64,1.789Zm28.423,8,16-8h3.578l-16,8Zm19.578,16-16-8h3.578l12.423,6.211Z" transform="translate(240.64)" fill="#c00"/>
+    </g>
+  </g>
+</svg>

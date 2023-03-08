@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="40" height="40" viewBox="0 0 40 40">
+  <defs>
+    <linearGradient id="linear-gradient" x1="0.5" x2="0.5" y2="1" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#ffcb00"/>
+      <stop offset="0.502" stop-color="#ff9f31"/>
+      <stop offset="1" stop-color="#c96400"/>
+    </linearGradient>
+  </defs>
+  <g id="Group_18546" data-name="Group 18546" transform="translate(-330 -60)">
+    <rect id="Rectangle_7" data-name="Rectangle 7" width="40" height="40" rx="7" transform="translate(330 60)" fill="#fbfbfb"/>
+    <g id="chat-2036143" transform="translate(340 70)">
+      <path id="Path_2870" data-name="Path 2870" d="M10,0A10.006,10.006,0,0,0,0,10H0a9.956,9.956,0,0,0,1.129,4.625c.071.133.133.267.2.391a1.317,1.317,0,0,1,.089,1,19.575,19.575,0,0,0-.711,2.33c0,.391.116.623.534.623a19.047,19.047,0,0,0,2.241-.649,1.53,1.53,0,0,1,.96.062c.276.142.525.347.8.471h.089A10,10,0,0,0,20,10h0A10.006,10.006,0,0,0,10,0Z" opacity="0.4" fill="url(#linear-gradient)"/>
+      <path id="Path_2871" data-name="Path 2871" d="M5.261,11.535a1.252,1.252,0,0,1-1.252-1.252h0a1.252,1.252,0,1,1,1.252,1.252Zm4.522,0A1.244,1.244,0,0,1,8.53,10.283h0a1.252,1.252,0,1,1,1.252,1.252Zm4.513,0a1.252,1.252,0,0,1-1.252-1.252h0A1.252,1.252,0,1,1,14.3,11.535Z" fill="url(#linear-gradient)"/>
+    </g>
+  </g>
+</svg>

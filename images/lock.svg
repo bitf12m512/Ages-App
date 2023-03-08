@@ -1,0 +1,15 @@
+<svg id="vuesax_bulk_lock" data-name="vuesax/bulk/lock" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="20" height="20" viewBox="0 0 20 20">
+  <defs>
+    <linearGradient id="linear-gradient" x2="1" y2="1" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#ffcb00"/>
+      <stop offset="0.502" stop-color="#ff9f31"/>
+      <stop offset="1" stop-color="#c96400"/>
+    </linearGradient>
+  </defs>
+  <g id="lock">
+    <path id="Vector" d="M2.717,1.358A1.358,1.358,0,1,1,1.358,0,1.358,1.358,0,0,1,2.717,1.358Z" transform="translate(8.642 11.742)" opacity="0.4" fill="url(#linear-gradient)"/>
+    <path id="Vector-2" data-name="Vector" d="M12.208,0H4.458C1.042,0,0,1.042,0,4.458v1.55c0,3.417,1.042,4.458,4.458,4.458h7.75c3.417,0,4.458-1.042,4.458-4.458V4.458C16.667,1.042,15.625,0,12.208,0ZM8.333,7.75A2.517,2.517,0,1,1,10.85,5.233,2.52,2.52,0,0,1,8.333,7.75Z" transform="translate(1.667 7.867)" fill="url(#linear-gradient)"/>
+    <path id="Vector-3" data-name="Vector" d="M1.167,6.208V5.233c0-2.442.692-4.067,4.067-4.067S9.3,2.792,9.3,5.233v.975a9.927,9.927,0,0,1,1.167.075V5.233C10.467,2.983,9.925,0,5.233,0S0,2.983,0,5.233V6.275A9.909,9.909,0,0,1,1.167,6.208Z" transform="translate(4.767 1.667)" opacity="0.4" fill="url(#linear-gradient)"/>
+    <path id="Vector-4" data-name="Vector" d="M0,0H20V20H0Z" fill="none" opacity="0"/>
+  </g>
+</svg>
