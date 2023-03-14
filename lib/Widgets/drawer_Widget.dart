@@ -1,16 +1,34 @@
 import 'package:ages/HelperFunctions/helper_functions.dart';
+import 'package:ages/Providers/current_user_provider.dart';
 import 'package:ages/Screens/CommunityChat/community_chat_screen.dart';
 import 'package:ages/Screens/EditProfileScreen/edit_profile.dart';
 import 'package:ages/Widgets/text_widget.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:provider/provider.dart';
 
+import '../Screens/AuthScreens/SignInScreen/signin_screen.dart';
 import '../Screens/PrivacyPolicyScreen/privacy_policy_screen.dart';
 import '../Screens/TermsAndCOnditionsScreen/terms_and_conditions.dart';
 
-class DrawerWidget extends StatelessWidget {
+class DrawerWidget extends StatefulWidget {
   const DrawerWidget({Key? key}) : super(key: key);
+
+  @override
+  State<DrawerWidget> createState() => _DrawerWidgetState();
+}
+
+class _DrawerWidgetState extends State<DrawerWidget> {
+  CurrentUserProvider? currentUserProvider;
+  @override
+  void initState() {
+    currentUserProvider=Provider.of<CurrentUserProvider>(context,listen: false);
+    currentUserProvider?.getCurrentUserData();
+    // TODO: implement initState
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,8 +44,8 @@ class DrawerWidget extends StatelessWidget {
             gradient: LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
-              stops: [0.3,0.8],
-              colors: [Color(0xffFFCB00), Color(0xffC96400)],
+              stops: [0.2,0.9],
+              colors: [Color(0xffFFCB00), Color(0xffCE6A05)],
             ),
 
           ),
@@ -36,28 +54,12 @@ class DrawerWidget extends StatelessWidget {
               SizedBox(height: size.height*0.15,),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: size.width*0.07),
-                child: Row(
-                  children: [
-                    Stack(
-                      children: [
-                        // image.isNotEmpty ? Container(
-                        //   width: SizeConfig.screenWidth * 0.3,
-                        //   height: SizeConfig.screenHeight * 0.1,
-                        //   margin: const EdgeInsets.only(right: 12),
-                        //   decoration: BoxDecoration(
-                        //     shape: BoxShape.circle,
-                        //     image: DecorationImage(
-                        //         image: NetworkImage(image.toString()),
-                        //         fit: BoxFit.cover
-                        //     ),
-                        //     border: Border.all(color: AppColors.redColor),
-                        //
-                        //   ),
-                        // ) :
-                        InkWell(
-                          onTap: (){
-                          },
-                          child: Container(
+                child: Consumer<CurrentUserProvider>(
+                  builder: (cxt,dataprovider,child)=> Row(
+                    children: [
+                      Stack(
+                        children: [
+                          Container(
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.all(Radius.circular(
                                   MediaQuery.of(context).size.height * 0.1),
@@ -78,73 +80,75 @@ class DrawerWidget extends StatelessWidget {
                               child: ClipRRect(
                                   borderRadius:
                                   const BorderRadius.all(Radius.circular(1000)),
-                                  child:CachedNetworkImage(
-                                    placeholder: (context, url) => Center(
-                                      child: Container(
-                                        child: const CircularProgressIndicator(),
-                                        padding: const EdgeInsets.all(80.0),
-                                        decoration: const BoxDecoration(
-                                          color: Colors.grey,
+                                  child:
+                                   CachedNetworkImage(
+                                      placeholder: (context, url) => Center(
+                                        child: Container(
+                                          child: const CircularProgressIndicator(),
+                                          padding: const EdgeInsets.all(80.0),
+                                          decoration: const BoxDecoration(
+                                            color: Colors.grey,
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                    errorWidget: (context, url, error) =>
-                                        Material(
-                                          child: Image.network(
-                                            "https://cvbay.com/wp-content/uploads/2017/03/dummy-image.jpg",
-                                            fit: BoxFit.fill,
+                                      errorWidget: (context, url, error) =>
+                                          Material(
+                                            child: Image.network(
+                                              "https://cvbay.com/wp-content/uploads/2017/03/dummy-image.jpg",
+                                              fit: BoxFit.fill,
+                                            ),
+                                            clipBehavior: Clip.hardEdge,
                                           ),
-                                          clipBehavior: Clip.hardEdge,
-                                        ),
-                                    imageUrl:
-                                    "https://cvbay.com/wp-content/uploads/2017/03/dummy-image.jpg",
-                                    fit: BoxFit.cover,
-                                    alignment: Alignment.center,
-                                  )),
+                                      imageUrl:
+                                      dataprovider.profileUrl==null? "https://cvbay.com/wp-content/uploads/2017/03/dummy-image.jpg":dataprovider.profileUrl.toString(),
+                                      fit: BoxFit.cover,
+                                      alignment: Alignment.center,
+                                    ),
+                                  ),
                             ),
                           ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(
-                              top:  size.height*0.045,
-                              left: size.width*0.037
-                          ),
-                          child: InkWell(
-                            onTap: (){
-                             HelperFunctions.moveToNextScreenWithPush(context, EditProfileScreen());
-                            },
-                            child: CircleAvatar(
-                              maxRadius: 12,
-                              backgroundColor: Colors.white,
-                              child: SvgPicture.asset(
-                                "images/edit.svg",
-                                height: size.height*0.05,
+                          Padding(
+                            padding: EdgeInsets.only(
+                                top:  size.height*0.045,
+                                left: size.width*0.037
+                            ),
+                            child: InkWell(
+                              onTap: (){
+                               HelperFunctions.moveToNextScreenWithPush(context, EditProfileScreen());
+                              },
+                              child: CircleAvatar(
+                                maxRadius: 12,
+                                backgroundColor: Colors.white,
+                                child: SvgPicture.asset(
+                                  "images/edit.svg",
+                                  height: size.height*0.05,
+                                ),
                               ),
                             ),
+                          )
+                        ],
+                      ),
+                      SizedBox(width: size.width*0.03,),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          TextWidget(
+                            text: dataprovider.name==null?"test": dataprovider.name.toString(),
+                            fontsize: 16,
+                            color: Colors.white,
+                            fontWeight: FontWeight.normal,
                           ),
-                        )
-                      ],
-                    ),
-                    SizedBox(width: size.width*0.03,),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        TextWidget(
-                          text: "SARA LUVA",
-                          fontsize: 16,
-                          color: Colors.white,
-                          fontWeight: FontWeight.normal,
-                        ),
-                        TextWidget(
-                          text: "saraluva110@gmail.com",
-                          fontsize: 14,
-                          fontWeight: FontWeight.normal,
-                          color: Colors.white,
+                          TextWidget(
+                            text: dataprovider.email.toString(),
+                            fontsize: 14,
+                            fontWeight: FontWeight.normal,
+                            color: Colors.white,
 
-                        ),
-                      ],
-                    )
-                  ],
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
                 ),
               ),
               SizedBox(height: size.height*0.02,),
@@ -245,11 +249,17 @@ class DrawerWidget extends StatelessWidget {
                             height: size.height*0.035,
                           ),
                           SizedBox(width: size.width*0.04,),
-                          TextWidget(
-                            text: "LOGOUT",
-                            fontsize: 16,
-                            fontWeight: FontWeight.normal,
-                            color: Colors.white,
+                          InkWell(
+                            onTap: () async {
+                              await FirebaseAuth.instance.signOut();
+                              HelperFunctions.moveToNextScreen(context, const SignInScreen());
+                            },
+                            child: TextWidget(
+                              text: "LOGOUT",
+                              fontsize: 16,
+                              fontWeight: FontWeight.normal,
+                              color: Colors.white,
+                            ),
                           ),
                         ],
                       )

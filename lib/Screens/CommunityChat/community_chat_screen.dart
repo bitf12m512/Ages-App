@@ -1,10 +1,15 @@
-import 'package:ages/Screens/HomeScreen/home_screen.dart';
+import 'package:ages/HelperFunctions/firebase_methods.dart';
+import 'package:ages/Screens/CommunityChat/chat_bubble.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 import '../../HelperFunctions/helper_functions.dart';
+import '../../Providers/current_user_provider.dart';
 import '../../Widgets/text_widget.dart';
 
 class CommunityChatScreen extends StatefulWidget {
@@ -14,47 +19,62 @@ class CommunityChatScreen extends StatefulWidget {
   _CommunityChatScreenState createState() => _CommunityChatScreenState();
 }
 
+
+
+
 class _CommunityChatScreenState extends State<CommunityChatScreen> {
   TextEditingController msgController=TextEditingController();
+  FirebaseMethods? firebaseMethods;
+  CurrentUserProvider? currentUserProvider;
+
+  @override
+  void initState() {
+    firebaseMethods=Provider.of<FirebaseMethods>(context,listen: false);
+    currentUserProvider=Provider.of<CurrentUserProvider>(context,listen: false);
+    firebaseMethods?.getMessageList(senderid: FirebaseAuth.instance.currentUser!.uid);
+    firebaseMethods?.getallUsers();
+    // TODO: implement initState
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     var size=MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: const Color(0xffF6E091),
       body: SafeArea(
         child: Padding(
           padding:  EdgeInsets.symmetric(horizontal: size.width*0.04),
           child: Column(
             children: [
-              Expanded(
-                child: Column(
-                  children: [
-                    SizedBox(height: size.height*0.02,),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.all(Radius.circular(
-                                MediaQuery.of(context).size.height * 0.1),
-                            ),
-                            gradient: const LinearGradient(
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                              colors: [Color(0xff0065F7), Color(0xff06C406)],
-                            ),
-                          ),
-                          padding: EdgeInsets.all(1),
-                          child: Container(
-                            height: MediaQuery.of(context).size.height * 0.045,
-                            width: MediaQuery.of(context).size.height * 0.045,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.all(Radius.circular(
-                                    MediaQuery.of(context).size.height * 0.1))),
-                            child: ClipRRect(
-                                borderRadius:
-                                const BorderRadius.all(Radius.circular(1000)),
-                                child:CachedNetworkImage(
+              SizedBox(height: size.height*0.02,),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(
+                          MediaQuery.of(context).size.height * 0.1),
+                      ),
+                      gradient: const LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [Color(0xff0065F7), Color(0xff06C406)],
+                      ),
+                    ),
+                    padding: const EdgeInsets.all(1),
+                    child: Container(
+                      height: MediaQuery.of(context).size.height * 0.045,
+                      width: MediaQuery.of(context).size.height * 0.045,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(
+                              MediaQuery.of(context).size.height * 0.1))),
+                      child: ClipRRect(
+                          borderRadius:
+                          const BorderRadius.all(Radius.circular(1000)),
+                          child:Consumer<CurrentUserProvider>(
+                            builder: (cxt,dataprovider,child)=>
+                                CachedNetworkImage(
                                   placeholder: (context, url) => Center(
                                     child: Container(
                                       child: const CircularProgressIndicator(),
@@ -73,639 +93,140 @@ class _CommunityChatScreenState extends State<CommunityChatScreen> {
                                         clipBehavior: Clip.hardEdge,
                                       ),
                                   imageUrl:
-                                  "https://cvbay.com/wp-content/uploads/2017/03/dummy-image.jpg",
+                                  dataprovider.profileUrl==null? "https://cvbay.com/wp-content/uploads/2017/03/dummy-image.jpg":dataprovider.profileUrl.toString(),
                                   fit: BoxFit.cover,
                                   alignment: Alignment.center,
-                                )),
-                          ),
-                        ),
-                        TextWidget(
-                          text: "COMMUNITY CHAT",
-                          fontsize: 24,
-                          fontWeight: FontWeight.normal,
-                          color: Colors.black,
-                        ),
-                        InkWell(
-                          onTap: (){
-                            HelperFunctions.moveToNextScreenWithPush(context, const HomeScreen());
-                          },
-                          child: SvgPicture.asset(
-                            "images/homeicon.svg",
-                            height: size.height*0.05,
-                          ),
-                        ),
-
-                      ],
+                                ),
+                          )),
                     ),
-                    SizedBox(height: size.height*0.04,),
-                    Column(
-                      children: [
-                        Row(
-                          children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.all(Radius.circular(
-                                    MediaQuery.of(context).size.height * 0.1),
-                                ),
-                                gradient: const LinearGradient(
-                                  begin: Alignment.topLeft,
-                                  end: Alignment.bottomRight,
-                                  colors: [Color(0xff0065F7), Color(0xff06C406)],
-                                ),
-                              ),
-                              padding: EdgeInsets.all(1),
-                              child: Container(
-                                height: MediaQuery.of(context).size.height * 0.035,
-                                width: MediaQuery.of(context).size.height * 0.035,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.all(Radius.circular(
-                                        MediaQuery.of(context).size.height * 0.1))),
-                                child: ClipRRect(
-                                    borderRadius:
-                                    const BorderRadius.all(Radius.circular(1000)),
-                                    child:CachedNetworkImage(
-                                      placeholder: (context, url) => Center(
-                                        child: Container(
-                                          child: const CircularProgressIndicator(),
-                                          padding: const EdgeInsets.all(80.0),
-                                          decoration: const BoxDecoration(
-                                            color: Colors.grey,
-                                          ),
-                                        ),
-                                      ),
-                                      errorWidget: (context, url, error) =>
-                                          Material(
-                                            child: Image.network(
-                                              "https://cvbay.com/wp-content/uploads/2017/03/dummy-image.jpg",
-                                              fit: BoxFit.fill,
-                                            ),
-                                            clipBehavior: Clip.hardEdge,
-                                          ),
-                                      imageUrl:
-                                      "https://cvbay.com/wp-content/uploads/2017/03/dummy-image.jpg",
-                                      fit: BoxFit.cover,
-                                      alignment: Alignment.center,
-                                    )),
-                              ),
-                            ),
-                            SizedBox(width: size.width*0.03,),
-                            TextWidget(
-                              text: "Sara Luva",
-                              fontsize: 16,
-                              fontWeight: FontWeight.normal,
-                              color: Colors.black,
-                            ),
-                            SizedBox(width: size.width*0.03,),
-                            TextWidget(
-                              text: "9:10 am",
-                              fontsize: 16,
-                              fontWeight: FontWeight.normal,
-                              color: Color(0xffA1A1A1),
-                            ),
-
-                          ],
-                        ),
-                        Container(
-                          alignment: Alignment.topLeft,
-                          color: Colors.white,
-                          child: Column(
-                            children: [
-                              Container(
-                                width: double.infinity,
-                                /*constraints: BoxConstraints(
-                              maxWidth: MediaQuery
-                                  .of(context)
-                                  .size
-                                  .width * 0.80,
-                            ),*/
-
-                                padding: const EdgeInsets.all(5),
-                                margin: const EdgeInsets.only(
-                                    top: 5,
-                                    bottom: 5,
-                                    left: 35
-                                ),
-                                decoration: BoxDecoration(
-                                  color: const Color(0xffF0F0F0),
-                                  borderRadius: BorderRadius.circular(5),
-                                ),
-                                child: Text(
-                                    "In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document",
-                                    style:GoogleFonts.poppins(
-                                      textStyle: const TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 12
-                                      ),
-                                    )
-
-
-                                ),
-                              ),
-                              Container(
-                                margin: const EdgeInsets.only(
-                                    bottom: 5,
-                                    left: 35
-                                ),
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                      child: Container(
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: size.width*0.1,
-                                            vertical: size.height*0.008
-                                        ),
-                                        decoration: BoxDecoration(
-                                          color: const Color(0xffF0F0F0),
-                                          borderRadius: BorderRadius.circular(5),
-                                        ),
-                                        child: Row(
-                                          children: [
-                                            SvgPicture.asset(
-                                              "images/heart.svg",
-                                              width: 20,
-                                              height: 20,fit: BoxFit.scaleDown,
-                                            ),
-                                            TextWidget(
-                                              text: "LIKES (02)",
-                                              fontsize: 14,
-                                              fontWeight: FontWeight.normal,
-                                              color: Colors.black,
-                                            ),
-
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                    SizedBox(width: size.width*0.01,),
-                                    Expanded(
-                                      child: Container(
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: size.width*0.1,
-                                            vertical: size.height*0.008
-                                        ),
-
-                                        decoration: BoxDecoration(
-                                          color: const Color(0xffF0F0F0),
-                                          borderRadius: BorderRadius.circular(5),
-                                        ),
-                                        child: Row(
-                                          children: [
-                                            SvgPicture.asset(
-                                              "images/replay.svg",
-                                              width: 20,
-                                              height: 20,fit: BoxFit.scaleDown,
-                                            ),
-                                            TextWidget(
-                                              text: "REPLY    ",
-                                              fontsize: 14,
-                                              fontWeight: FontWeight.normal,
-                                              color: Colors.black,
-                                            ),
-
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
+                  ),
+                  TextWidget(
+                    text: "Community Chat",
+                    fontsize: 24,
+                    fontWeight: FontWeight.normal,
+                    color: Colors.black,
+                  ),
+                  InkWell(
+                    onTap: (){
+                      HelperFunctions.moveToNextScreenWithPush(context, const CommunityChatScreen());
+                    },
+                    child: SvgPicture.asset(
+                      "images/homeicon.svg",
+                      height: size.height*0.04,
                     ),
-                    SizedBox(height: size.height*0.02,),
-                    Column(
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
+                  ),
 
-                            TextWidget(
-                              text: "Sara Luva",
-                              fontsize: 16,
-                              fontWeight: FontWeight.normal,
-                              color: Colors.black,
-                            ),
-
-                            SizedBox(width: size.width*0.03,),
-                            TextWidget(
-                              text: "9:10 am",
-                              fontsize: 16,
-                              fontWeight: FontWeight.normal,
-                              color: Color(0xffA1A1A1),
-                            ),
-
-                            SizedBox(width: size.width*0.03,),
-                            Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.all(Radius.circular(
-                                    MediaQuery.of(context).size.height * 0.1),
-                                ),
-                                gradient: const LinearGradient(
-                                  begin: Alignment.topLeft,
-                                  end: Alignment.bottomRight,
-                                  colors: [Color(0xff0065F7), Color(0xff06C406)],
-                                ),
-                              ),
-                              padding: EdgeInsets.all(1),
-                              child: Container(
-                                height: MediaQuery.of(context).size.height * 0.035,
-                                width: MediaQuery.of(context).size.height * 0.035,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.all(Radius.circular(
-                                        MediaQuery.of(context).size.height * 0.1))),
-                                child: ClipRRect(
-                                    borderRadius:
-                                    const BorderRadius.all(Radius.circular(1000)),
-                                    child:CachedNetworkImage(
-                                      placeholder: (context, url) => Center(
-                                        child: Container(
-                                          child: const CircularProgressIndicator(),
-                                          padding: const EdgeInsets.all(80.0),
-                                          decoration: const BoxDecoration(
-                                            color: Colors.grey,
-                                          ),
-                                        ),
-                                      ),
-                                      errorWidget: (context, url, error) =>
-                                          Material(
-                                            child: Image.network(
-                                              "https://cvbay.com/wp-content/uploads/2017/03/dummy-image.jpg",
-                                              fit: BoxFit.fill,
-                                            ),
-                                            clipBehavior: Clip.hardEdge,
-                                          ),
-                                      imageUrl:
-                                      "https://cvbay.com/wp-content/uploads/2017/03/dummy-image.jpg",
-                                      fit: BoxFit.cover,
-                                      alignment: Alignment.center,
-                                    )),
-                              ),
-                            ),
-
-
-                          ],
-                        ),
-                        Container(
-                          alignment: Alignment.topLeft,
-                          color: Colors.white,
-                          child: Column(
-                            children: [
-                              Container(
-                                width: double.infinity,
-                                /*constraints: BoxConstraints(
-                              maxWidth: MediaQuery
-                                  .of(context)
-                                  .size
-                                  .width * 0.80,
-                            ),*/
-
-                                padding: const EdgeInsets.all(5),
-                                margin: const EdgeInsets.only(
-                                    top: 5,
-                                    bottom: 5,
-                                    right: 35
-                                ),
-                                decoration: BoxDecoration(
-                                  color: const Color(0xffFAF0E5),
-                                  borderRadius: BorderRadius.circular(5),
-                                ),
-                                child: Text(
-                                    "In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document",
-                                    style:GoogleFonts.poppins(
-                                      textStyle: const TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 12
-                                      ),
-                                    )
-
-
-                                ),
-                              ),
-                              Container(
-                                margin: const EdgeInsets.only(
-
-                                    bottom: 5,
-                                    right: 35
-                                ),
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                      child: Container(
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: size.width*0.1,
-                                            vertical: size.height*0.008
-                                        ),
-                                        decoration: BoxDecoration(
-                                          color: const Color(0xffFAF0E5),
-                                          borderRadius: BorderRadius.circular(5),
-                                        ),
-                                        child: Row(
-                                          children: [
-                                            SvgPicture.asset(
-                                              "images/heart.svg",
-                                              width: 20,
-                                              height: 20,fit: BoxFit.scaleDown,
-                                            ),
-                                            TextWidget(
-                                              text: "LIKES (02)",
-                                              fontsize: 14,
-                                              fontWeight: FontWeight.normal,
-                                              color: Colors.black,
-                                            ),
-
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                    SizedBox(width: size.width*0.01,),
-                                    Expanded(
-                                      child: Container(
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: size.width*0.1,
-                                            vertical: size.height*0.008
-                                        ),
-
-                                        decoration: BoxDecoration(
-                                          color: const Color(0xffFAF0E5),
-                                          borderRadius: BorderRadius.circular(5),
-                                        ),
-                                        child: Row(
-                                          children: [
-                                            SvgPicture.asset(
-                                              "images/replay.svg",
-                                              width: 20,
-                                              height: 20,fit: BoxFit.scaleDown,
-                                            ),
-                                            TextWidget(
-                                              text: "REPLY   ",
-                                              fontsize: 14,
-                                              fontWeight: FontWeight.normal,
-                                              color: Colors.black,
-                                            ),
-
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: size.height*0.02,),
-                    Column(
-                      children: [
-                        Row(
-                          children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.all(Radius.circular(
-                                    MediaQuery.of(context).size.height * 0.1),
-                                ),
-                                gradient: const LinearGradient(
-                                  begin: Alignment.topLeft,
-                                  end: Alignment.bottomRight,
-                                  colors: [Color(0xff0065F7), Color(0xff06C406)],
-                                ),
-                              ),
-                              padding: EdgeInsets.all(1),
-                              child: Container(
-                                height: MediaQuery.of(context).size.height * 0.035,
-                                width: MediaQuery.of(context).size.height * 0.035,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.all(Radius.circular(
-                                        MediaQuery.of(context).size.height * 0.1))),
-                                child: ClipRRect(
-                                    borderRadius:
-                                    const BorderRadius.all(Radius.circular(1000)),
-                                    child:CachedNetworkImage(
-                                      placeholder: (context, url) => Center(
-                                        child: Container(
-                                          child: const CircularProgressIndicator(),
-                                          padding: const EdgeInsets.all(80.0),
-                                          decoration: const BoxDecoration(
-                                            color: Colors.grey,
-                                          ),
-                                        ),
-                                      ),
-                                      errorWidget: (context, url, error) =>
-                                          Material(
-                                            child: Image.network(
-                                              "https://cvbay.com/wp-content/uploads/2017/03/dummy-image.jpg",
-                                              fit: BoxFit.fill,
-                                            ),
-                                            clipBehavior: Clip.hardEdge,
-                                          ),
-                                      imageUrl:
-                                      "https://cvbay.com/wp-content/uploads/2017/03/dummy-image.jpg",
-                                      fit: BoxFit.cover,
-                                      alignment: Alignment.center,
-                                    )),
-                              ),
-                            ),
-                            SizedBox(width: size.width*0.03,),
-                            TextWidget(
-                              text: "Sara Luva",
-                              fontsize: 16,
-                              fontWeight: FontWeight.normal,
-                              color: Colors.black,
-                            ),
-                            SizedBox(width: size.width*0.03,),
-                            TextWidget(
-                              text: "9:10 am",
-                              fontsize: 16,
-                              fontWeight: FontWeight.normal,
-                              color: Color(0xffA1A1A1),
-                            ),
-
-                          ],
-                        ),
-                        Container(
-                          alignment: Alignment.topLeft,
-                          color: Colors.white,
-                          child: Column(
-                            children: [
-                              Container(
-                                width: double.infinity,
-                                /*constraints: BoxConstraints(
-                              maxWidth: MediaQuery
-                                  .of(context)
-                                  .size
-                                  .width * 0.80,
-                            ),*/
-
-                                padding: const EdgeInsets.all(5),
-                                margin: const EdgeInsets.only(
-                                    top: 5,
-                                    bottom: 5,
-                                    left: 35
-                                ),
-                                decoration: BoxDecoration(
-                                  color: const Color(0xffF0F0F0),
-                                  borderRadius: BorderRadius.circular(5),
-                                ),
-                                child: Column(
-                                  children: [
-                                    Container(
-
-                                      width: double.infinity,
-
-                                      decoration: BoxDecoration(
-                                          color: const Color(0xffFBF8EE),
-                                          borderRadius: BorderRadius.circular(5)
-                                      ),
-                                      child: IntrinsicHeight(
-
-                                        child: Row(
-                                          children: [
-                                            Container(
-                                              decoration: const BoxDecoration(
-                                                color: Color(0xffCE6A05),
-                                                borderRadius: BorderRadius.only(
-                                                  bottomLeft: Radius.circular(
-                                                    8.0,
-                                                  ),
-                                                  topLeft: Radius.circular(
-                                                    8.0,
-                                                  ),
-                                                ),
-                                              ),
-                                              width: 7.0,
-                                            ),
-                                            SizedBox(width: size.width*0.02,),
-                                            Expanded(
-                                              child: Padding(
-                                                padding:  EdgeInsets.symmetric(vertical: 5),
-                                                child: Column(
-                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                  children: [
-                                                    TextWidget(
-                                                      text: "Jacob Man",
-                                                      fontsize: 12,
-                                                      fontWeight: FontWeight.normal,
-                                                      color: Color(0xffCE6A05),
-                                                    ),
-                                                    Text(
-                                                        "In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document",
-                                                        style:GoogleFonts.poppins(
-                                                          textStyle: const TextStyle(
-                                                              color: Colors.black,
-                                                              fontSize: 10
-                                                          ),
-                                                        )
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                    const SizedBox(height: 5,),
-                                    Text(
-                                        "In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document",
-                                        style:GoogleFonts.poppins(
-                                          textStyle: const TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 12
-                                          ),
-                                        )
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Container(
-                                margin: const EdgeInsets.only(
-
-                                    bottom: 5,
-                                    left: 35
-                                ),
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                      child: Container(
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: size.width*0.1,
-                                            vertical: size.height*0.008
-                                        ),
-                                        decoration: BoxDecoration(
-                                          color: const Color(0xffF0F0F0),
-                                          borderRadius: BorderRadius.circular(5),
-                                        ),
-                                        child: Row(
-                                          children: [
-                                            SvgPicture.asset(
-                                              "images/heart.svg",
-                                              width: 20,
-                                              height: 20,fit: BoxFit.scaleDown,
-                                            ),
-                                            TextWidget(
-                                              text: "LIKES (02)",
-                                              fontsize: 14,
-                                              fontWeight: FontWeight.normal,
-                                              color: Colors.black,
-                                            ),
-
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                    SizedBox(width: size.width*0.01,),
-                                    Expanded(
-                                      child: Container(
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: size.width*0.1,
-                                            vertical: size.height*0.008
-                                        ),
-
-                                        decoration: BoxDecoration(
-                                          color: const Color(0xffF0F0F0),
-                                          borderRadius: BorderRadius.circular(5),
-                                        ),
-                                        child: Row(
-                                          children: [
-                                            SvgPicture.asset(
-                                              "images/replay.svg",
-                                              width: 20,
-                                              height: 20,fit: BoxFit.scaleDown,
-                                            ),
-                                            TextWidget(
-                                              text: "REPLY    ",
-                                              fontsize: 14,
-                                              fontWeight: FontWeight.normal,
-                                              color: Colors.black,
-                                            ),
-
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-
-                ),
+                ],
               ),
+              Expanded(
+                child: Consumer<FirebaseMethods>(
+                  builder: (cxt,chatProvider,child)=>
+                  ListView.builder(
+                      shrinkWrap:  true,
+                      reverse: true,
+                      itemCount: chatProvider.cimmunityChatList.length,
+                      itemBuilder: (BuildContext cxt,int index){
+                      firebaseMethods?.userslist.where((element) => element.uid==firebaseMethods?.cimmunityChatList[index].uid);
+                        var dt = getDateTimeByTimeStamp(int.parse(
+                            chatProvider.cimmunityChatList[index]
+                                .timestamp!.toString()), "hh:mm a");
+                        String? dateTime;
+                        if (index == chatProvider.cimmunityChatList.length - 1) {
+                          dateTime = getDateTimeByTimeStamp(int.parse(
+                              chatProvider.cimmunityChatList[chatProvider
+                                  .cimmunityChatList.length - 1 - index]
+                                  .timestamp!.toString()), "dd MMM yyyy");
+                        }
+                        else {
+                          if (index > 0) {
+                            var time = int.parse(
+                                chatProvider.cimmunityChatList[chatProvider.cimmunityChatList.length - 1 - index].timestamp
+                                    .toString());
+                            var previous = DateTime
+                                .fromMillisecondsSinceEpoch(time);
+                            var time1 = int.parse(
+                                chatProvider.cimmunityChatList[
+                                  chatProvider.cimmunityChatList.length - 1 - index - 1]
+                                    .timestamp.toString());
+                            var next = DateTime.fromMillisecondsSinceEpoch(
+                                time1);
+                            if (previous.day - next.day != 0) {
+                              dateTime = getDateTimeByTimeStamp(int.parse(
+                                  chatProvider.cimmunityChatList[chatProvider.cimmunityChatList.length - 1 - index]
+                                      .timestamp!.toString()), "dd MMM yyyy");
+                            }
+                          }
+                          else {
+                            if (index == 0 &&
+                                chatProvider.cimmunityChatList.length > 1) {
+                              var time = int.parse(
+                                  chatProvider.cimmunityChatList[chatProvider.cimmunityChatList.length - 1 - index]
+                                      .timestamp.toString());
+                              var previous = DateTime
+                                  .fromMillisecondsSinceEpoch(time);
+                              var time1 = int.parse(
+                                  chatProvider.cimmunityChatList[chatProvider.cimmunityChatList.length - 1 - index - 1]
+                                      .timestamp.toString());
+                              var next = DateTime.fromMillisecondsSinceEpoch(
+                                  time1);
+                              if (previous.day - next.day != 0) {
+                                dateTime = getDateTimeByTimeStamp(int.parse(
+                                    chatProvider.cimmunityChatList[chatProvider.cimmunityChatList.length - 1 - index]
+                                        .timestamp!.toString()), "dd MMM yyyy");
+                              }
+                              else {
+                                return ChatBubble(
+                                    msgSenderId: chatProvider.cimmunityChatList[index].uid,
+                                    authId: FirebaseAuth.instance.currentUser!.uid,
+                                    msg: chatProvider.cimmunityChatList[index].msg,
+                                    ImgUrl: currentUserProvider?.profileUrl.toString(),
+                                    name: currentUserProvider?.name.toString(),
+                                    keyvalue:chatProvider.cimmunityChatList[index].key,
+                                    likes:chatProvider.cimmunityChatList[index].likes?['count'].toString(),
+                                    index: index,isliked: chatProvider.cimmunityChatList[index].isliked!,
+                                    datetime: dateTime,time: dt.toString(),
+                                    atherusername:chatProvider.cimmunityChatList[index].userModel!.userName,
+                                    atherImgUrl:chatProvider.cimmunityChatList[index].userModel!.profileUrl,
+                                   replied: chatProvider.cimmunityChatList[index].replied,
+                                  comment: chatProvider.cimmunityChatList[index].comment,
+                                );
 
+                              }
+                            }
+                            else {
+
+                            }
+                          }
+                        }
+
+
+
+                      return ChatBubble(
+                          msgSenderId: chatProvider.cimmunityChatList[index].uid,
+                          authId: FirebaseAuth.instance.currentUser!.uid,
+                          msg: chatProvider.cimmunityChatList[index].msg,
+                          ImgUrl: currentUserProvider?.profileUrl.toString(),
+                          name: currentUserProvider?.name.toString(),
+                          keyvalue:chatProvider.cimmunityChatList[index].key,
+                          likes:chatProvider.cimmunityChatList[index].likes?['count'].toString(),
+                          index: index,isliked: chatProvider.cimmunityChatList[index].isliked!,
+                          datetime: dateTime,time: dt.toString(),
+                          atherusername:chatProvider.cimmunityChatList[index].userModel!.userName,
+                          atherImgUrl:chatProvider.cimmunityChatList[index].userModel!.profileUrl,
+                          replied: chatProvider.cimmunityChatList[index].replied,
+                          comment: chatProvider.cimmunityChatList[index].comment,
+                          );
+                  }),
+                ),
+
+              ),
               Padding(
                 padding:  EdgeInsets.symmetric(vertical: 5),
                 child: Container(
                   padding: const EdgeInsets.only(
                       left: 10,right: 10),
                   decoration:  BoxDecoration(
-                      color: const Color(0xffe0e0e0),
+                      color: Colors.white,
                       borderRadius: BorderRadius.circular(10)
                   ),
                   width: double.infinity,
@@ -738,9 +259,26 @@ class _CommunityChatScreenState extends State<CommunityChatScreen> {
                         ),
                       ),
                       const SizedBox(width: 15,),
-                      SvgPicture.asset(
-                        "images/send.svg",
-                        height: size.height*0.03,
+                      InkWell(
+                        onTap: () async{
+                          if(msgController.text.isEmpty){
+
+                          }
+                          else if(msgController.text.trim().isEmpty){
+
+                          }
+                          else{
+                            String msg=msgController.text;
+                            msgController.clear();
+                            await firebaseMethods?.sendMessagedata(msg: msg,
+                                replayed: false,);
+                          }
+
+                        },
+                        child: SvgPicture.asset(
+                          "images/send.svg",
+                          height: size.height*0.03,
+                        ),
                       ),
                     ],
                   ),
@@ -751,6 +289,16 @@ class _CommunityChatScreenState extends State<CommunityChatScreen> {
           ),
         ),
       ),
+
     );
   }
+  String getDateTimeByTimeStamp(int? timestamp, String format) {
+    var date = DateTime.fromMillisecondsSinceEpoch(timestamp!);
+    final DateFormat formatter = DateFormat(format);
+    String formatted = formatter.format(date);
+    return formatted;
+  }
+
+
+
 }

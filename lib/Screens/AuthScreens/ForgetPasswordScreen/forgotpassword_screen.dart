@@ -1,4 +1,7 @@
 import 'package:ages/Screens/AuthScreens/SetNewPasswordScreen/setnewpassword_screen.dart';
+import 'package:ages/Screens/AuthScreens/SignInScreen/signin_screen.dart';
+import 'package:ages/Widgets/reset_link_dialog.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import '../../../HelperFunctions/helper_functions.dart';
@@ -15,11 +18,47 @@ class ForgotPasswordScreen extends StatefulWidget {
 
 class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   TextEditingController emailController=TextEditingController();
+  bool emailErrorvisible=false;
+  late FocusNode emailFocusNode;
+  String? emailError;
+  @override
+  void initState() {
+    emailFocusNode=FocusNode();
+    emailFocusNode.addListener(() {
+      if(!emailFocusNode.hasFocus){
+        if(emailController.text.isEmpty){
+          setState(() {
+            emailErrorvisible=true;
+            emailError="please enter valid email address";
+          });
+        }
+        else if(!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(emailController.text)){
+          setState(() {
+            emailErrorvisible=true;
+            emailError="please enter valid email address";
+          });
+        }
+        else{
+          setState(() {
+            emailErrorvisible=false;
+          });
+        }
+      }
+      else{
+        setState(() {
+          emailErrorvisible=false;
+        });
+      }
+    });
+    // TODO: implement initState
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     var size=MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: Colors.white,
+      resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: Stack(
           children: [
@@ -71,7 +110,14 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   ),
                   SizedBox(height: size.height*0.03,),
                   TextFieldWidget(controller: emailController,
-                      textInputAction: TextInputAction.next,
+                      textInputAction: TextInputAction.done,
+                      focusNode: emailFocusNode,
+                      errortext: emailErrorvisible == true ? emailError : '',
+                      onTap: (){
+                        setState(() {
+                          emailErrorvisible=false;
+                        });
+                      },
                       prefixIcon: SvgPicture.asset(
                         "images/mail.svg",
                         width: 5,
@@ -79,7 +125,31 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                       ), hintText: "Enter Email"),
                   SizedBox(height: size.height*0.03,),
                   ButtonWidget(text: "SEND LINK", onPressed: (){
-                    HelperFunctions.moveToNextScreenWithPush(context, const SetNewPasswordScreen());
+                    print("hhkkjkk");
+                    if(emailController.text.isEmpty){
+                      setState(() {
+                        emailErrorvisible=true;
+                        emailError="please enter valid email address";
+                      });
+                    }
+                    else if(!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(emailController.text)){
+                      setState(() {
+                        emailErrorvisible=true;
+                        emailError="please enter valid email address";
+                      });
+                    }
+                    else{
+                      FirebaseAuth.instance.sendPasswordResetEmail(
+                        email: emailController.text,)
+                          .catchError((onError) => print('Error sending email verification $onError'))
+                          .then((value) =>  HelperFunctions.moveToNextScreen(context,  ResetLink(
+                        image: "images/linksend.svg",
+                         title: 'Verification Link Sent',
+                        subtitle: 'A verification link has been sent to your email verify first and then procced toward login.',
+                        screenname: const SignInScreen(),
+                      )));
+                   }
+
                   })
 
 

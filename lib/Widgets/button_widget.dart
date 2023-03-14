@@ -14,10 +14,10 @@ class ButtonWidget extends StatelessWidget {
         gradient: const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          stops: [0.4,0.8],
+          stops: [0.1,0.8],
           colors: [Color(0xffFFCB00), Color(0xffC96400)],
         ),
-        borderRadius: BorderRadius.circular(5)
+        borderRadius: BorderRadius.circular(10)
       ),
       child: MaterialButton(onPressed: onPressed,
         minWidth: double.infinity,

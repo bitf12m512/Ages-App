@@ -1,7 +1,23 @@
-import 'package:ages/splash_screen.dart';
-import 'package:flutter/material.dart';
 
-void main() {
+import 'package:ages/HelperFunctions/firebase_methods.dart';
+import 'package:ages/Providers/current_user_provider.dart';
+import 'package:ages/Screens/AuthScreens/SignInScreen/signin_screen.dart';
+import 'package:ages/Providers/email_password_provider.dart';
+import 'package:ages/Screens/AuthScreens/SignUpScreen/signup_screen.dart';
+import 'package:ages/Screens/CommunityChat/community_chat_screen.dart';
+import 'package:ages/Screens/EditProfileScreen/edit_profile.dart';
+import 'package:ages/Screens/HomeScreen/home_screen.dart';
+import 'package:ages/Widgets/drawer_Widget.dart';
+import 'package:ages/splash_screen.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import 'Providers/image_upload_provider.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(const MyApp());
 }
 
@@ -11,7 +27,39 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+
+    return MultiProvider(providers: [
+      ChangeNotifierProvider(
+        create: (context)=>EmailPasswordProvider(),
+        child: const SignUpScreen() ,
+      ),
+
+      ChangeNotifierProvider(
+        create: (context)=>EmailPasswordProvider(),
+        child: const SignInScreen(),
+      ),
+      ChangeNotifierProvider(
+        create: (context)=>ImageUploadProvider(),
+        child: const EditProfileScreen(),
+      ),
+      ChangeNotifierProvider(
+        create: (context)=>CurrentUserProvider(),
+        child: const EditProfileScreen(),
+      ),
+      ChangeNotifierProvider(
+        create: (context)=>CurrentUserProvider(),
+        child: const HomeScreen(),
+      ),
+      ChangeNotifierProvider(
+        create: (context)=>CurrentUserProvider(),
+        child: const DrawerWidget(),
+      ),
+      ChangeNotifierProvider(
+        create: (context)=>FirebaseMethods(),
+        child: const CommunityChatScreen(),
+      ),
+    ],
+    child: MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
         fontFamily: "times new roman",
@@ -27,6 +75,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       home: const SplashScreen(),
+    ),
     );
   }
 }

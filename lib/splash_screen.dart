@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:ages/HelperFunctions/helper_functions.dart';
 import 'package:ages/Screens/AuthScreens/SignInScreen/signin_screen.dart';
+import 'package:ages/Screens/HomeScreen/home_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -18,7 +20,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     Timer(const Duration(seconds: 3),
-            ()=> HelperFunctions.moveToNextScreen(context, SignInScreen()) );
+            ()=> HelperFunctions.moveToNextScreen(context, FirebaseAuth.instance.currentUser==null?const SignInScreen():const HomeScreen()));
     // TODO: implement initState
     super.initState();
   }
@@ -54,11 +56,7 @@ class _SplashScreenState extends State<SplashScreen> {
                         fontWeight: FontWeight.normal,
                           color: Colors.white,
                       )
-
-
                 )
-
-
               ],
             ),
           ),
@@ -75,10 +73,6 @@ class _SplashScreenState extends State<SplashScreen> {
               ),
             ),
           ),
-
-          // SvgPicture.asset(
-          //   "images/ageslogo.svg",
-          // ),
         ],
       )
     );

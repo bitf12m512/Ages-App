@@ -10,9 +10,9 @@ class PrivacyPolicy extends StatelessWidget {
   Widget build(BuildContext context) {
     var size=MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: const Color(0xffF6E091),
       bottomNavigationBar: Container(
-        color: const Color(0xffF0F0F0),
+        color: Colors.white,
         padding: const EdgeInsets.all(10),
         child: SvgPicture.asset(
           "images/eu-project.svg",
@@ -42,7 +42,7 @@ class PrivacyPolicy extends StatelessWidget {
                     fontWeight: FontWeight.normal,
                     color: Colors.black,
                   ),
-                  Text(""),
+                  Text("       "),
 
                 ],
               ),

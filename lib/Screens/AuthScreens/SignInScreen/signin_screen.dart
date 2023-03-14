@@ -1,13 +1,16 @@
 import 'package:ages/HelperFunctions/helper_functions.dart';
 import 'package:ages/Screens/AuthScreens/ForgetPasswordScreen/forgotpassword_screen.dart';
+import 'package:ages/Providers/email_password_provider.dart';
 import 'package:ages/Screens/AuthScreens/SignUpScreen/signup_screen.dart';
-import 'package:ages/Screens/HomeScreen/home_screen.dart';
+
+import 'package:ages/Widgets/loading_alert.dart';
 
 import 'package:ages/Widgets/text_widget.dart';
 import 'package:ages/Widgets/textfield_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:provider/provider.dart';
 
 import '../../../Widgets/button_widget.dart';
 
@@ -21,6 +24,92 @@ class SignInScreen extends StatefulWidget {
 class _SignInScreenState extends State<SignInScreen> {
   TextEditingController emailController=TextEditingController();
   TextEditingController passwordController=TextEditingController();
+  bool emailErrorvisible=false;
+  bool passwordErrorvisible=false;
+  late FocusNode emailFocusNode;
+  late FocusNode passwordFocusNode;
+  String? emailError;
+  String? passwordError;
+  EmailPasswordProvider? emailPasswordProvider;
+
+  @override
+  void initState() {
+    emailPasswordProvider= Provider.of<EmailPasswordProvider>(context,listen: false);
+    emailFocusNode=FocusNode();
+    passwordFocusNode=FocusNode();
+    emailFocusNode.addListener(() {
+      if(!emailFocusNode.hasFocus){
+        if(emailController.text.isEmpty){
+          setState(() {
+            emailErrorvisible=true;
+            emailError="please enter valid email address";
+          });
+        }
+        else if(!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(emailController.text)){
+          setState(() {
+            emailErrorvisible=true;
+            emailError="please enter valid email address";
+          });
+        }
+        else{
+          setState(() {
+            emailErrorvisible=false;
+          });
+        }
+      }
+      else{
+        setState(() {
+          emailErrorvisible=false;
+        });
+      }
+    });
+    passwordFocusNode.addListener(() {
+      if(!passwordFocusNode.hasFocus){
+        if(passwordController.text.isEmpty){
+          setState(() {
+            passwordError="please enter password";
+            passwordErrorvisible=true;
+          });
+        }
+        else if(passwordController.text.length<8){
+          setState(() {
+            passwordError="Password must be 8 characters long";
+            passwordErrorvisible=true;
+          });
+        }
+        else if(RegExp(r"\s").hasMatch(passwordController.text)){
+          setState(() {
+            passwordError="please enter password";
+            passwordErrorvisible=true;
+          });
+        }
+        else{
+          setState(() {
+            passwordErrorvisible=false;
+          });
+        }
+
+      }
+      else{
+        setState(() {
+          passwordErrorvisible=false;
+        });
+      }
+    });
+    // TODO: implement initState
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    // TODO: implement dispose
+    super.dispose();
+  }
+
+
+
   @override
   Widget build(BuildContext context) {
     var size=MediaQuery.of(context).size;
@@ -63,23 +152,36 @@ class _SignInScreenState extends State<SignInScreen> {
                   SizedBox(height: size.height*0.03,),
                   TextFieldWidget(controller: emailController,
                       textInputAction: TextInputAction.next,
+                      focusNode: emailFocusNode,
+                      errortext: emailErrorvisible == true ? emailError : '',
+                      onTap: (){
+                        setState(() {
+                          emailErrorvisible=false;
+                        });
+                      },
                       prefixIcon: SvgPicture.asset(
                         "images/mail.svg",
                         width: 5,
                         height: 5,fit: BoxFit.scaleDown,
                       ), hintText: "Enter Email"),
-                  SizedBox(height: size.height*0.02,),
+                 emailErrorvisible==true? SizedBox(height: size.height*0.02,):Container(),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      TextFieldWidget(controller: emailController,
+                      TextFieldWidget(controller: passwordController,
                           textInputAction: TextInputAction.done,
+                          focusNode: passwordFocusNode,
+                          errortext: passwordErrorvisible == true ? passwordError : '',
+                          onTap: (){
+                            setState(() {
+                              passwordErrorvisible=false;
+                            });
+                          },
                           prefixIcon: SvgPicture.asset(
                               "images/lock.svg",
                               width: 5,
                               height: 5,fit: BoxFit.scaleDown
                           ), hintText: "Enter Password"),
-                      SizedBox(height: size.height*0.01,),
                       InkWell(
                         onTap: (){
                           HelperFunctions.moveToNextScreenWithPush(context,ForgotPasswordScreen());
@@ -94,9 +196,11 @@ class _SignInScreenState extends State<SignInScreen> {
                     ],
                   ),
                   SizedBox(height: size.height*0.05,),
-                  ButtonWidget(text: "SIGN IN", onPressed: (){
-                    HelperFunctions.moveToNextScreenWithPush(context, HomeScreen());
-                  }),
+                      ButtonWidget(text: "SIGN IN", onPressed: (){
+                        validate();
+                      }),
+
+
 
 
 
@@ -143,4 +247,44 @@ class _SignInScreenState extends State<SignInScreen> {
       ),
     );
   }
+  validate(){
+    if(emailController.text.isEmpty){
+      setState(() {
+        emailErrorvisible=true;
+        emailError="please enter valid email address";
+      });
+    }
+    else if(!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(emailController.text)){
+      setState(() {
+        emailErrorvisible=true;
+        emailError="please enter valid email address";
+      });
+    }
+    else if(passwordController.text.isEmpty){
+      setState(() {
+        passwordError="please enter password";
+        passwordErrorvisible=true;
+      });
+    }
+    else if(passwordController.text.length<8){
+      setState(() {
+        passwordError="Password must be 8 characters long";
+        passwordErrorvisible=true;
+      });
+    }
+    else if(RegExp(r"\s").hasMatch(passwordController.text)){
+      setState(() {
+        passwordError="please enter password";
+        passwordErrorvisible=true;
+      });
+    }
+    else{
+      // LoadingAlert(context: context);
+      showloadingdialog.ShowLoadingDialog(context);
+      emailPasswordProvider?.signInFunction(context: context,
+          emailAddress: emailController.text,password: passwordController.text);
+
+    }
+  }
+
 }
